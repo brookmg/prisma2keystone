@@ -1,0 +1,61 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id                  String  @id @default(uuid()) @db.Uuid
+  firstName           String?
+  lastName            String?
+  companyName         String?
+  phoneNumber         String? @unique
+  email               String  @unique
+  verifiedPhoneNumber Boolean @default(false)
+  verifiedProfile     Boolean @default(false)
+  verifiedEmail       Boolean @default(false)
+  password            String
+  role                Role    @default(USER)
+  deleted             Boolean @default(false)
+  attempts            Int     @default(0)
+
+  // timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
+
+  logs       Log[]
+}
+
+model Log {
+  id           String   @id @default(uuid()) @db.Uuid
+  ip           String
+  profileId    String?  @db.Uuid
+  method       String
+  route        String
+  tag          EventTag @default(INFO)
+  statusCode   Int
+  useragent    String
+  responseTime Float
+
+  // timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
+
+  // references
+  blame Profile? @relation(fields: [profileId], references: [id])
+}
+
+enum EventTag {
+  ERROR
+  INFO
+}
+
+enum Role {
+  USER
+  ADMIN
+  SUPPORT
+}
