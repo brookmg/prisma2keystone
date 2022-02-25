@@ -1,6 +1,6 @@
 {
   "name": "prisma2keystone",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simple CLI to generate a starter schema for keystone-6 from a pre-existing prisma schema. ",
   "main": "./dist/index.js",
   "scripts": {
